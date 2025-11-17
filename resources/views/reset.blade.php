@@ -83,21 +83,21 @@
           </div>
           <div class="card card-style">
             <div class="content mb-0 mt-1 mb-3">
-                <form method="post" action="#" enctype='multipart/form-data'>
-                    <input type="hidden" name="_token" value="S0pQqq83On2q9uFmFfo90ZPUURnudvbIcSYTcmtn"> 
+                <form method="POST" action="{{url('/reset')}}" enctype='multipart/form-data'>
+                  @csrf  
                       <div class="text-center my-3">
                         <img src="{{ asset('images/logo.png') }}" width="75" height="75" class="rounded-xl ">  
                     </div>        
                         <div class="input-style input-style-always-active has-borders no-icon validate-field mb-4 mt-4">
                         <label for="password" class="color-green-dark">Password</label>
-                        <input type="password" class="form-control is-invalid " id="password" required minlength="6" placeholder=Password>
+                        <input type="password" class="form-control is-invalid " id="password" name="password" required minlength="6" placeholder=Password>
                         <div class="invalid-feedback" id="password"></div>
                         <em>(Required)</em>
                         </div>
 
                         <div class="input-style input-style-always-active has-borders no-icon validate-field mb-4 mt-4">
                         <label for="confirmPassword" class="color-green-dark">Confirm Password</label>
-                        <input type="password" class="form-control is-invalid " id="confirmPassword" required placeholder=ConfirmPassword>
+                        <input type="password" class="form-control is-invalid " id="confirmPassword"   name="confirm_password" required placeholder=ConfirmPassword>
                         <div class="invalid-feedback" id="confirmPasswordFeedback"></div>
                         <em>(Required)</em>
                         </div>

@@ -95,6 +95,29 @@
       display:flex;
       gap:10px;
     }
+    .footer-icon {
+        font-size: 20px;
+        transition: 0.3s ease-in-out;
+    }
+
+    .footer-link {
+        color: #333;
+        text-decoration: none;
+    }
+
+    .footer-link:hover .footer-icon {
+        transform: scale(1.3);
+        color: #0077ff;
+    }
+
+    .footer-link:hover div.label {
+        color: #0077ff;
+    }
+
+    /* Mobile bounce effect */
+    .footer-link:active .footer-icon {
+        transform: scale(1.5) rotate(10deg);
+    }
     
       
   </style>
@@ -109,13 +132,22 @@
     <div id="page">
          <div class="page-title page-title-small">
                 <h2>
-                    <a href="{{ url('/complaint_list') }}" data-back-button="" style="padding-right: 5px;"><i class="fa fa-arrow-left" ></i></a>
+                    <a href="{{ url('/dashboard') }}" data-back-button="" style="padding-right: 5px;"><i class="fa fa-arrow-left" ></i></a>
                     <span class="me-2 fw-bold">Complaint_Details</span>
   
                 </h2>
-                <a href="#" data-menu="menu-main" class="bg-green-dark shadow-xl preload-img entered loaded"
+                <!-- <a href="#" data-menu="menu-main" class="bg-green-dark shadow-xl preload-img entered loaded"
                     data-src="images/profile.jpeg" data-ll-status="loaded" onclick="toggleProfileSidebar()"
-                    style="background-image: url('https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTY6qtMj2fJlymAcGTWLvNtVSCULkLnWYCDcQ&s');" ></a>
+                    style="background-image: url('https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTY6qtMj2fJlymAcGTWLvNtVSCULkLnWYCDcQ&s');" ></a> -->
+                    <a href="" 
+                    data-menu="menu-main" 
+                    class="bg-green-dark shadow-xl preload-img entered loaded"
+                    onclick="toggleProfileSidebar()"
+                    style="display: inline-block; width: 80px; height: 80px; border-radius: 50%; overflow: hidden; box-shadow: 0 4px 6px rgba(0,0,0,0.2); cursor: pointer;">
+                        <img src="{{ asset('images/profile.jpeg') }}" 
+                            alt="Profile" 
+                            style="width: 100%; height: 100%; object-fit: cover; display: block;">
+                </a>
             </div>
           <div class="card header-card shape-rounded" data-card-height="250">
             <div class="card-overlay bg-green-dark opacity-95"></div>
@@ -131,28 +163,24 @@
 <div id="profileSidebar">
   <div class="close-btn" onclick="closeProfileSidebar()">X</div>
     <div class="text-center mb-3">
-        <img src="{{ asset('images/logo.png') }}" width="50" class="mb-2">
+        <img src="{{ asset('images/profile.jpeg') }}" width="50" class="mb-2">
         <h5 class="fw-bold mb-0">{{ Auth::user()->name ?? 'User Name' }}</h5>
     </div>
     <hr>
     <ul class="list-unstyled">
         <li class="mb-2"><a href="{{ url('/dashboard') }}" class="text-decoration-none color-green-dark fs-6">Dashboard</a></li>
-        <li class="mb-2"><a href="{{ url('/profile_edit') }}" class="text-decoration-none color-green-dark fs-6">Edit</a></li>
-        <li>
-            <form action="{{ url('') }}" method="#">
-                @csrf
-                <button class="btn btn-link text-decoration-none p-0 color-green-dark fs-6">Logout</button>
-            </form>
-        </li>
+        <li class="mb-2"><a href="{{ url('/profile') }}" class="text-decoration-none color-green-dark fs-6">Profile</a></li>
+        <li class="mb-2"><a href="{{ url('/complaint_list') }}" class="text-decoration-none color-green-dark fs-6">All Complaints</a></li>
+        <li class="mb-2"><a href="{{ url('/index') }}" class="text-decoration-none color-green-dark fs-6">Logout</a></li>
     </ul>
 </div>
     </div>
 
-    <div class="card card-style">
+    <!-- <div class="card card-style">
             <div class="content mb-0 mt-1 mb-3">
-                <form method="post" action="#" enctype='multipart/form-data'>
-                    <input type="hidden" name="_token" value="S0pQqq83On2q9uFmFfo90ZPUURnudvbIcSYTcmtn">        
-                        <div class="input-style1 input-style-always-active has-borders no-icon validate-field mb-4 mt-4">
+                <form method="post" action="#" enctype='multipart/form-data'> -->
+                           
+                        <!-- <div class="input-style1 input-style-always-active has-borders no-icon validate-field mb-4 mt-4">
                            <label><strong>Complaint ID:</strong></label>
                            <span>C002</span>
                         </div>
@@ -186,8 +214,61 @@
                         <label for="remark"><strong>Remarks:</strong></label>
                         <span>Resolved</span>
                         
-                        </div>
-                    </form>
+                        </div> -->
+
+
+
+    <div class="card card-style">
+    <div class="content mb-0 mt-1 mb-3">
+        <form method="post" action="#" enctype='multipart/form-data'>
+            @csrf
+
+            <div class="input-style1 input-style-always-active has-borders no-icon validate-field mb-4 mt-4">
+                <label><strong>Complaint ID:</strong></label>
+                <span>{{ $complaint->id }}</span>
+            </div>
+
+            <div class="input-style1 input-style-always-active has-borders no-icon validate-field mb-4 mt-4">
+                <label><strong>Date of Complaint:</strong></label>
+                <span>{{ $complaint->created_at->format('Y-m-d') }}</span>
+            </div>
+
+            <div class="input-style1 input-style-always-active has-borders no-icon validate-field mb-4 mt-4">
+                <label><strong>Description:</strong></label>
+                <span>{{ $complaint->remarks }}</span>
+            </div>
+
+            <div class="input-style2 input-style-always-active has-borders no-icon validate-field mb-4 mt-4">
+                <label><strong>Image (during complaint):</strong></label><br>
+                @if($complaint->image)
+                    <img src="{{ asset('complaint_images/' . $complaint->image) }}" 
+                         alt="Complaint Image" style="max-width:100%; height:auto;">
+                @else
+                    <span>No image available</span>
+                @endif
+            </div>
+
+            <div class="input-style1 input-style-always-active has-borders no-icon validate-field mb-4 mt-4">
+                <label><strong>Latitude & Longitude:</strong></label>
+                <span>{{ $complaint->latitude }} , {{ $complaint->longitude }}</span>
+            </div>
+
+            <div class="input-style2 input-style-always-active has-borders no-icon validate-field mb-4 mt-4">
+                <label><strong>Image (after resolution):</strong></label><br>
+                @if($complaint->updated_image)
+                    <img src="{{ asset($complaint->updated_image) }}" alt="updated Image"style="max-width:100%; height:auto;" >
+                @else
+                    <span>No resolved image</span>
+                @endif
+            </div>
+
+            <div class="input-style1 input-style-always-active has-borders no-icon validate-field mb-4 mt-4">
+                <label><strong>Remarks:</strong></label>
+                <span>{{ $complaint->officials_remarks ?? 'N/A' }}</span>
+            </div>
+       
+   
+            </form>
             </div>
         </div>
     
@@ -223,8 +304,46 @@
   <div class="footer-card card shape-rounded " style="height:230px">
     <div class="card-overlay bg-green-dark opacity-90"></div>
   </div>
-</div>       </div>
+</div>       
+</div>
+<!-- Footer Navigation -->
+<nav class="navbar navbar-light" >
+    <div class="container-fluid d-flex justify-content-around text-center py-2">
+
+        <!-- Complaints -->
+        <a href="{{ url('/complaint_list') }}" class="footer-link">
+            <div>
+                <i class="fas fa-exclamation-triangle footer-icon" style="color:#ffffff;"></i>
+                <div class="label" style="color:#ffffff;font-size: 13px;">Complaints</div>
+            </div>
+        </a>
+
+        <!-- Home -->
+        <a href="{{ url('/dashboard') }}" class="footer-link">
+            <div>
+                <i class="fas fa-home footer-icon" style="color:#ffffff;"></i>
+                <div class="label" style="color:#ffffff;font-size: 13px;">Home</div>
+            </div>
+        </a>
+
+        <!-- Profile -->
+        <a href="{{ url('/profile') }}" class="footer-link">
+            <div>
+                <i class="fas fa-user-circle footer-icon" style="color:#ffffff;"></i>
+                <div class="label" style="color:#ffffff;font-size: 13px;">Profile</div>
+            </div>
+        </a>
+
+        <a href="{{ url('/index') }}" class="footer-link">
+            <div>
+                <i class="fas fa-sign-out-alt footer-icon" style="color:#ffffff;"></i>
+                <div class="label" style="color:#ffffff;font-size: 13px;">Logout</div>
+            </div>
+        </a>
+
     </div>
+</nav>
+</div>
 
     <!-- JS -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
@@ -241,4 +360,4 @@
     }
 </script>
   </body>
-</html>
+</html>        

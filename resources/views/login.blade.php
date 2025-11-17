@@ -20,6 +20,9 @@
       .label{
         color:green;
       }
+      .bg-green-light1 {
+        background:linear-gradient(64deg, #5154e7, #ae1ee9) !important;
+      }
     </style>
   </head>
 
@@ -48,7 +51,32 @@
           </div>
           <div class="content mt-2 mb-0">
             <h2 class="mb-3 color-green-dark">Login</h2>
-              <form method="POST" action="#">
+             <!-- @if(session('success'))
+              <div class="alert text-center s-alrt" role="alert" style="
+                background-color: #4ceba3ff;
+                color: #0d5c37ff;
+                border: 1px solid #3ae497ff;
+                font-size: 16px;
+                font-weight: 500;
+                margin-top: 10px;
+                border-radius: 10px;
+                box-shadow: 0 5px 15px rgba(0, 128, 0, 0.1);
+              ">
+                <i class="fa fa-check-circle me-2"></i> {{ session('success') }}
+              </div>
+            @endif -->
+            @if(session('success'))
+                  <script>
+                      alert("{{ session('success') }}");
+                  </script>
+              @endif
+
+            @if(session('error'))
+                <div class="alert alert-danger" style="background-color: #ffe6e6; color: #a94442; padding: 10px; border: 1px solid #f5c6cb; border-radius: 5px;">
+                    <strong>Try Again:</strong> {{ session('error') }}
+                </div>
+            @endif
+              <form method="POST" action="{{route('login')}}">
               @csrf
                 <div class="input-style no-borders has-icon validate-field mb-4">
                   <i class="fa fa-user"></i>
@@ -57,14 +85,26 @@
                   title="Please enter your phone number" placeholder="Enter your phone number">
                   <em>(required)</em>
                 </div>
-                <div class="input-style no-borders has-icon validate-field mb-4">
+                <!-- <div class="input-style no-borders has-icon validate-field mb-4">
                   <i class="fa fa-lock"></i>
                   <label for="password" class="color-green-dark" >Password</label>
                   <input class="form-control validate-password" type="password" name="password" required placeholder="******">
                   <em>(required)</em>
                 </div>
-                <center>
-                  <input type="submit" class="btn btn-m mt-4 mb-4 btn-full bg-green-light rounded-sm text-uppercase font-900" value="Login">
+                <center> -->
+                  <div class="input-style no-borders has-icon validate-field mb-4" style="position: relative;">
+                      <i class="fa fa-lock"></i>
+                      <label for="password" class="color-green-dark">Password</label>
+                      <input id="password" class="form-control validate-password" type="password" name="password" required placeholder="********">
+                      <em>(required)</em>
+
+                      <!-- Eye Icon -->
+                      <i class="fa fa-eye toggle-password" 
+                        onclick="togglePassword()" 
+                        style="position: absolute; right: 10px; top: 26px; cursor: pointer; color: #666;"></i>
+                  </div>
+                  <center>
+                  <input type="submit" class="btn btn-m mt-4 mb-4 btn-full bg-green-light1 rounded-sm text-uppercase font-900" value="Login">
                 </center>
               </form>
           <div class="divider mt-4 mb-3"></div>          
@@ -119,6 +159,28 @@
             window.location.reload();
           }
         });
+
+        $(document).ready(function() {
+          $(".s-alrt").fadeTo(3000, 500).slideUp(500, function(){
+            $(".s-alrt").slideUp(500);
+          });
+        });
       </script>
+      <script>
+function togglePassword() {
+    const passwordField = document.getElementById("password");
+    const toggleIcon = document.querySelector(".toggle-password");
+
+    if (passwordField.type === "password") {
+        passwordField.type = "text";
+        toggleIcon.classList.remove("fa-eye");
+        toggleIcon.classList.add("fa-eye-slash"); // show slash when visible
+    } else {
+        passwordField.type = "password";
+        toggleIcon.classList.remove("fa-eye-slash");
+        toggleIcon.classList.add("fa-eye"); // show eye when hidden
+    }
+}
+</script>
     </body>
 </html>

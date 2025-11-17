@@ -12,7 +12,7 @@
     <meta name="author" content="pixelstrap">
     <link rel="icon" href="https://bbmpgov.org/public/theme/images/favicon-icon.png" type="image/x-icon">
     <link rel="shortcut icon" href="https://bbmpgov.org/public/theme/images/favicon-icon.png" type="image/x-icon">
-    <title>Login </title>
+    <title>Admin_Forgot_Password </title>
     <!-- Google font-->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
@@ -67,10 +67,10 @@
                             <div class="d-flex row align-items-center">
                                 <div class="col-lg-6 col-12 mb-3">
                                     <div class="d-flex flex-row gap-1 align-items-center justify-content-around">
-                                        <img src="https://bbmpgov.org/public/theme/images/karnataka.png" width="15%;" alt="">
+                                        <img src="{{asset('images/karnataka.png')}}" width="15%;" alt="">
 
                                         <h6 class="text-dark fw-bold text-center">Black Spot Monitoring System</h6>
-                                         <img src="https://bbmpgov.org/public/theme/images/logo.png" width="15%;" alt="">
+                                         <img src="{{asset('images/logo.png')}}" width="15%;" alt="">
                                     </div>
 
                                 </div>
@@ -78,14 +78,20 @@
                                 <div class="col-lg-6 col-12">
                                     <h4 class="text-center" style="color:#2a1570;">Forgot_Password</h4>
                                     <h5 class="text-start mb-3 text-dark mt-5 mb-2 fs-5"></h5>
-                                    <form class="  theme-form login-form responsive-form"  method="GET"  action="{{ url('/admin_otp') }}">
-                                        <input type="hidden" name="_token" value="z5IFaPDInut17Pb4nT4ucL8wUMgpKKwDaQWPUZV0" autocomplete="off">                                        
+                                    @if(session('success'))
+                                        <p style="color: green">{{ session('success') }}</p>
+                                    @endif
+                                    @if($errors->any())
+                                        <p style="color: red">{{ $errors->first() }}</p>
+                                    @endif
+                                    <form class="  theme-form login-form responsive-form"  method="POST"  action="{{ route('admin.forgot') }}">
+                                         @csrf                                      
                                         <div class="form-group">
                                             <label>Email</label>
-                                            <input type="email" class="form-control" placeholder="Enter your email" required>
+                                            <input type="email" name="email" class="form-control" placeholder="Enter your email" required>
                                         </div>
                                         <div class="text-end mt-3">
-                                            <button type="submit" class="btn btn-primary">Submit</button>
+                                            <button type="submit" class="btn btn-primary">Send OTP</button>
                                         </div>
                                         </div>
                                     </form>

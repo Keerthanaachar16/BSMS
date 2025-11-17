@@ -97,6 +97,30 @@
       opacity:0;
       
     }
+
+     .footer-icon {
+        font-size: 20px;
+        transition: 0.3s ease-in-out;
+    }
+
+    .footer-link {
+        color: #333;
+        text-decoration: none;
+    }
+
+    .footer-link:hover .footer-icon {
+        transform: scale(1.3);
+        color: #0077ff;
+    }
+
+    .footer-link:hover div.label {
+        color: #0077ff;
+    }
+
+    /* Mobile bounce effect */
+    .footer-link:active .footer-icon {
+        transform: scale(1.5) rotate(10deg);
+    }
     
       
   </style>
@@ -115,9 +139,15 @@
                     <span class="me-2 fw-bold">Add_Complaints</span>
   
                 </h2>
-                <a href="#" data-menu="menu-main" class="bg-green-dark shadow-xl preload-img entered loaded"
-                    data-src="images/profile.jpeg" data-ll-status="loaded" onclick="toggleProfileSidebar()"
-                    style="background-image: url('https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTY6qtMj2fJlymAcGTWLvNtVSCULkLnWYCDcQ&s');" ></a>
+                <a href="" 
+                    data-menu="menu-main" 
+                    class="bg-green-dark shadow-xl preload-img entered loaded"
+                    onclick="toggleProfileSidebar()"
+                    style="display: inline-block; width: 80px; height: 80px; border-radius: 50%; overflow: hidden; box-shadow: 0 4px 6px rgba(0,0,0,0.2); cursor: pointer;">
+                        <img src="{{ asset('images/profile.jpeg') }}" 
+                            alt="Profile" 
+                            style="width: 100%; height: 100%; object-fit: cover; display: block;">
+                </a>
             </div>
           <div class="card header-card shape-rounded" data-card-height="250">
             <div class="card-overlay bg-green-dark opacity-95"></div>
@@ -133,7 +163,7 @@
 <div id="profileSidebar">
   <div class="close-btn" onclick="closeProfileSidebar()">X</div>
     <div class="text-center mb-3">
-        <img src="{{ asset('images/logo.png') }}" width="50" class="mb-2">
+        <img src="{{ asset('images/profile.jpeg') }}" width="50" class="mb-2">
         <h5 class="fw-bold mb-0">{{ Auth::user()->name ?? 'User Name' }}</h5>
     </div>
     <hr>
@@ -152,8 +182,16 @@
 
     <div class="card card-style">
             <div class="content mb-0 mt-1 mb-3">
-                <form method="post" action="#" enctype='multipart/form-data'>
-                    <input type="hidden" name="_token" value="S0pQqq83On2q9uFmFfo90ZPUURnudvbIcSYTcmtn">        
+              <!-- @if(session('success'))
+                  <div class="alert alert-success">{{ session('success') }}</div>
+              @endif -->
+              @if(session('success'))
+                  <script>
+                      alert("{{ session('success') }}");
+                  </script>
+              @endif
+                <form method="post" action="{{url('/complaints')}}" enctype='multipart/form-data'>
+                   @csrf       
                         <div class="input-style input-style-always-active has-borders no-icon validate-field mb-4 mt-4">
                             <label for="latitude" class="color-green-dark">Latitude<span1 class="text-danger">*</span1></label>
                             <input type="text" id="latitude" name="latitude" required readonly>
@@ -170,26 +208,34 @@
 
                         <div class="input-style input-style-always-active has-borders no-icon validate-field mb-4 mt-4">
                         <label for="ward" class="color-green-dark">Ward<span1 class="text-danger">*</span1></label>
-                        <select name="ward" id="ward" required>
-                            <option value="">Select Ward</option>
-                            <option value="Ward 1">Ward 1</option>
-                            <option value="Ward 2">Ward 2</option>
-                            <option value="Ward 3">Ward 3</option>
-                            <!-- Add more wards -->
+                       
+                        <select name="ward" class="form-select" required>
+                            <option value="">-- Select Ward --</option>
+                            @foreach($wards as $ward)
+                                <option value="{{ $ward->ward_no }}">{{ $ward->ward_no }}</option>
+                            @endforeach
                         </select>
                         <i class="fa fa-times disabled invalid color-red-dark"></i>
                         <i class="fa fa-check disabled valid color-green-dark"></i>
                         </div>
 
-                        <div class="input-style input-style-always-active has-borders no-icon validate-field mb-4 mt-4">
+                        <!-- <div class="input-style input-style-always-active has-borders no-icon validate-field mb-4 mt-4">
                           <label for="image" class="color-green-dark">Image<span1 class="text-danger">*</span1></label>
                             <input type="file" accept="image/*" capture="environment" id="image" name="image" onchange="previewImage(event)" required>
                             <div class="image-preview" id="imagePreview">
-                            <!-- <img id="previewImg" src="#" alt="Captured Image" width="250" height="250" >
-                            <button type="button" onclick="deleteImage()">×</button> -->
+                            <img id="previewImg" src="#" alt="Captured Image" width="250" height="250" >
+                            <button type="button" onclick="deleteImage()">×</button>
                             </div>
                         <i class="fa fa-times disabled invalid color-red-dark"></i>
                         <i class="fa fa-check disabled valid color-green-dark"></i>
+                        </div> -->
+
+                        <div class="input-style input-style-always-active has-borders no-icon validate-field mb-4 mt-4">
+                          <label for="image" class="color-green-dark">Capture Image<span class="text-danger">*</span></label>
+                          <input type="file" accept="image/*" id="image" name="image" onchange="validateImage(event)" required>
+
+                          <i class="fa fa-times disabled invalid color-red-dark"></i>
+                          <i class="fa fa-check disabled valid color-green-dark"></i>
                         </div>
 
                         <div class="input-style input-style-always-active has-borders no-icon validate-field mb-4 mt-4">
@@ -238,8 +284,46 @@
   <div class="footer-card card shape-rounded " style="height:230px">
     <div class="card-overlay bg-green-dark opacity-90"></div>
   </div>
-</div>       </div>
+</div>       
+</div>
+    <!-- Footer Navigation -->
+<nav class="navbar navbar-light" >
+    <div class="container-fluid d-flex justify-content-around text-center py-2">
+
+        <!-- Complaints -->
+        <a href="{{ url('/complaint_list') }}" class="footer-link">
+            <div>
+                <i class="fas fa-exclamation-triangle footer-icon" style="color:#ffffff;"></i>
+                <div class="label" style="color:#ffffff;font-size: 13px;">Complaints</div>
+            </div>
+        </a>
+
+        <!-- Home -->
+        <a href="{{ url('/dashboard') }}" class="footer-link">
+            <div>
+                <i class="fas fa-home footer-icon" style="color:#ffffff;"></i>
+                <div class="label" style="color:#ffffff;font-size: 13px;">Home</div>
+            </div>
+        </a>
+
+        <!-- Profile -->
+        <a href="{{ url('/profile') }}" class="footer-link">
+            <div>
+                <i class="fas fa-user-circle footer-icon" style="color:#ffffff;"></i>
+                <div class="label" style="color:#ffffff;font-size: 13px;">Profile</div>
+            </div>
+        </a>
+
+        <a href="{{ url('/index') }}" class="footer-link">
+            <div>
+                <i class="fas fa-sign-out-alt footer-icon" style="color:#ffffff;"></i>
+                <div class="label" style="color:#ffffff;font-size: 13px;">Logout</div>
+            </div>
+        </a>
+
     </div>
+</nav>
+</div>
 
     <!-- JS -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
@@ -294,6 +378,32 @@
       preview.src = "#";
       imagePreview.style.display = "none";
     }
+
 </script>
-  </body>
+
+<script>
+    // Wait 3 seconds (3000ms) and hide the message
+    setTimeout(function() {
+        var msg = document.getElementById('success');
+        if(msg){
+            msg.style.display = 'none';
+        }
+    }, 3000); // 3 seconds
+</script>
+
+<script>
+function validateImage(event) {
+    const file = event.target.files[0];
+
+    if (!file) return;
+
+    const validImageTypes = ['image/jpeg', 'image/png', 'image/gif', 'image/jpg'];
+
+    if (!validImageTypes.includes(file.type)) {
+        alert('Please select a valid image file (JPEG, PNG, GIF).');
+        event.target.value = ''; // Reset the input
+    }
+}
+</script>
+</body>
 </html>

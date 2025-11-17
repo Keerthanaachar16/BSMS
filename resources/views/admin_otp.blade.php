@@ -12,7 +12,7 @@
     <meta name="author" content="pixelstrap">
     <link rel="icon" href="https://bbmpgov.org/public/theme/images/favicon-icon.png" type="image/x-icon">
     <link rel="shortcut icon" href="https://bbmpgov.org/public/theme/images/favicon-icon.png" type="image/x-icon">
-    <title>Login </title>
+    <title>Admin_OTP</title>
     <!-- Google font-->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
@@ -70,10 +70,10 @@
                             <div class="d-flex row align-items-center">
                                 <div class="col-lg-6 col-12 mb-3">
                                     <div class="d-flex flex-row gap-1 align-items-center justify-content-around">
-                                        <img src="https://bbmpgov.org/public/theme/images/karnataka.png" width="15%;" alt="">
+                                        <img src="{{asset('images/karnataka.png')}}" width="15%;" alt="">
 
                                         <h6 class="text-dark fw-bold text-center">Black Spot Monitoring System</h6>
-                                         <img src="https://bbmpgov.org/public/theme/images/logo.png" width="15%;" alt="">
+                                         <img src="{{asset('images/logo.png')}}" width="15%;" alt="">
                                     </div>
 
                                 </div>
@@ -81,18 +81,29 @@
                                 <div class="col-lg-6 col-12">
                                     <h4 class="text-center" style="color:#2a1570;">OTP</h4>
                                     <h5 class="text-start mb-3 text-dark mt-5 mb-2 fs-5"></h5>
-                                    <form class=" theme-form login-form responsive-form"  method="GET"  action="{{ url('/admin_reset') }}">
-                                        <input type="hidden" name="_token" value="z5IFaPDInut17Pb4nT4ucL8wUMgpKKwDaQWPUZV0" autocomplete="off">                                        
+                                    @if(session('success'))
+                                        <p style="color: green">{{ session('success') }}</p>
+                                    @endif
+                                    @if($errors->any())
+                                        <p style="color: red">{{ $errors->first() }}</p>
+                                    @endif
+                                    <form class=" theme-form login-form responsive-form"  method="POST"  action="{{route('admin.otp')}}">
+                                        @csrf                                       
                                         <label>Enter OTP</label>
                                         <div class="form-group d-flex justify-content-between">
                                             
-                                            <input type="text" class="form-control text-center mx-1 " maxlength="1" required style="border:2px solid #00000047;">
-                                            <input type="text" class="form-control text-center mx-1" maxlength="1" required style="border:2px solid #00000047;">
-                                            <input type="text" class="form-control text-center mx-1" maxlength="1" required style="border:2px solid #00000047;">
-                                            <input type="text" class="form-control text-center mx-1" maxlength="1" required style="border:2px solid #00000047;">
+                                            <input type="number" name="otp1" class="form-control text-center mx-1 " maxlength="1" required style="border:2px solid #00000047;">
+                                            <input type="number" name="otp2" class="form-control text-center mx-1" maxlength="1" required style="border:2px solid #00000047;">
+                                            <input type="number" name="otp3" class="form-control text-center mx-1" maxlength="1" required style="border:2px solid #00000047;">
+                                            <input type="number" name="otp4" class="form-control text-center mx-1" maxlength="1" required style="border:2px solid #00000047;">
+                                            <input type="number" name="otp5" class="form-control text-center mx-1" maxlength="1" required style="border:2px solid #00000047;">
+                                            <input type="number" name="otp6" class="form-control text-center mx-1" maxlength="1" required style="border:2px solid #00000047;">
                                         </div>
+
+                                          <!-- Hidden combined OTP field -->
+                                             <input type="hidden" name="otp" id="otpHidden">
                                         <div class="text-end mt-3">
-                                            <button type="submit" class="btn btn-primary">Verify</button>
+                                            <button type="submit" class="btn btn-primary">Verify OTP</button>
                                         </div>
                                     </form>
                                 </div>
@@ -131,6 +142,28 @@
         }
     }
     </script>
+
+    <script>
+    const form = document.querySelector('form');
+    form.addEventListener('submit', function(e) {
+        const digits = [
+            form.otp1.value,
+            form.otp2.value,
+            form.otp3.value,
+            form.otp4.value,
+            form.otp5.value,
+            form.otp6.value
+        ];
+        const otpValue = digits.join('');
+        
+        document.getElementById('otpHidden').value = otpValue;
+
+        if (otpValue.length !== 6) {
+            e.preventDefault();
+            alert('Please enter the full 6-digit OTP.');
+        }
+    });
+</script>
 
 </body>
 

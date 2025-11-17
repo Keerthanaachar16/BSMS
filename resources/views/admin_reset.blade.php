@@ -12,7 +12,7 @@
     <meta name="author" content="pixelstrap">
     <link rel="icon" href="https://bbmpgov.org/public/theme/images/favicon-icon.png" type="image/x-icon">
     <link rel="shortcut icon" href="https://bbmpgov.org/public/theme/images/favicon-icon.png" type="image/x-icon">
-    <title>Login </title>
+    <title>Admin_Reset</title>
     <!-- Google font-->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
@@ -71,10 +71,10 @@
                             <div class="d-flex row align-items-center">
                                 <div class="col-lg-6 col-12 mb-3">
                                     <div class="d-flex flex-row gap-1 align-items-center justify-content-around">
-                                        <img src="https://bbmpgov.org/public/theme/images/karnataka.png" width="15%;" alt="">
+                                        <img src="{{asset('images/karnataka.png')}}" width="15%;" alt="">
 
                                         <h6 class="text-dark fw-bold text-center">Black Spot Monitoring System</h6>
-                                         <img src="https://bbmpgov.org/public/theme/images/logo.png" width="15%;" alt="">
+                                         <img src="{{asset('images/logo.png')}}" width="15%;" alt="">
                                     </div>
 
                                 </div>
@@ -82,15 +82,18 @@
                                 <div class="col-lg-6 col-12">
                                     <h4 class="text-center" style="color:#2a1570;">Reset_Password</h4>
                                     <h5 class="text-start mb-3 text-dark mt-5 mb-2 fs-5"></h5>
-                                    <form class="theme-form login-form responsive-form"  method="GET"  action="" onsubmit="event.preventDefault(); validatePasswords();">
-                                        <input type="hidden" name="_token" value="z5IFaPDInut17Pb4nT4ucL8wUMgpKKwDaQWPUZV0" autocomplete="off">                                        
+                                    @if($errors->any())
+                                        <p style="color: red">{{ $errors->first() }}</p>
+                                    @endif
+                                    <form class="theme-form login-form responsive-form"  method="POST"  action="{{route('admin.reset')}}" >
+                                        @csrf                                        
                                         <div class="form-group">
                                             <label>New Password</label>
-                                            <input type="password" id="newPassword" class="form-control" required>
+                                            <input type="password" id="newPassword" name="password" class="form-control" required>
                                         </div>
                                         <div class="form-group">
                                             <label>Confirm New Password</label>
-                                            <input type="password" id="confirmPassword" class="form-control" required>
+                                            <input type="password" id="confirmPassword" name="password_confirmation" class="form-control" required>
                                             <small id="errorText" class="text-danger d-none">Passwords do not match</small>
                                         </div>
                                         <div class="text-end mt-3">
@@ -111,10 +114,10 @@
             </div>
         </div>
          <!-- Success Popup -->
-        <div id="successPopup" class="position-fixed top-50 start-50 translate-middle bg-success text-white p-3 rounded shadow d-none" style="z-index: 1050;">
+        <!-- <div id="successPopup" class="position-fixed top-50 start-50 translate-middle bg-success text-white p-3 rounded shadow d-none" style="z-index: 1050;">
             Password Changed Successfully!
         </div>
-        
+         -->
     </section>
    
 <!-- JS Scripts -->

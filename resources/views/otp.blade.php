@@ -43,6 +43,13 @@
     .footer-card{
         bottom : 0px !important;
     }
+    .span1 .text-danger{
+      position:absolute;
+      margin-left:0;
+      color:red !important;
+      opacity:0;
+      
+    }
   </style>
   </head>
 
@@ -66,15 +73,16 @@
             <div class="card-overlay dark-mode-tint"></div>
             <div class="card-bg preload-img" data-src=""></div>
           </div>
-                      <div class="ms-3 me-3 alert alert-small rounded-s shadow-xl bg-green-dark s-alrt" role="alert">
+              <div class="ms-3 me-3 alert alert-small rounded-s shadow-xl bg-green-dark s-alrt" role="alert">
               <span><i class="fa fa-check"></i></span>
               <strong>OTP sent successfully</strong>
               <button type="button" class="close color-white opacity-60 font-16" data-bs-dismiss="alert" aria-label="Close">&times;</button>
             </div>
                                 <div class="card card-style">
     <div class="content mt-2 mb-0">
-      <form class="mt-2" method="get" action="#">
-        <input type="hidden" name="_token" value="S0pQqq83On2q9uFmFfo90ZPUURnudvbIcSYTcmtn">  
+      <form class="mt-2" method="POST" action="{{url('/verify-otp')}}">
+        @csrf
+        
         <div class="text-center my-3">
                     <img src="{{ asset('images/logo.png') }}" width="75" height="75" class="rounded-xl ">  
         </div>       
@@ -83,11 +91,11 @@
           <label for="phone" class="color-highlight">Mobile*</label>
         </div> -->
         <div class="input-style input-style-always-active has-borders no-icon validate-field mb-4">
-          <input type="text" oninput="onlyNumeric(this)" maxlength="4" minlength="4" class="form-control validate-text phone" id="phone" placeholder="Enter OTP" name="otp" required>
-          <label for="phone" class="color-green-dark">OTP*</label>
+          <input type="text" oninput="onlyNumeric(this)" maxlength="6" minlength="6" class="form-control validate-text phone" id="otp" name="otp" placeholder="Enter OTP" name="otp" required>
+          <label for="phone" class="color-green-dark">OTP<span1 class="text-danger">*</span1></label>
         </div>
         <center>
-          <input type="submit" class="btn btn-m mt-4 mb-4 btn-full bg-green-dark rounded-sm text-uppercase font-900" value="Submit">
+          <input type="submit" class="btn btn-m mt-4 mb-4 btn-full bg-green-dark rounded-sm text-uppercase font-900" value="Verify OTP">
         </center>
       </form>
     </div>

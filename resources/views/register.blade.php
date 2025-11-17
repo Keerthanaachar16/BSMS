@@ -56,6 +56,31 @@
       .footer-card{
           bottom : 0px !important;
       }
+
+      .span1 .text-danger{
+      position:absolute;
+      margin-left:0;
+      color:red !important;
+      opacity:0;
+      
+    }
+
+      .alert {
+    padding: 10px;
+    border-radius: 5px;
+    margin-bottom: 15px;
+    font-size: 14px;
+}
+
+.alert-danger {
+    background-color: #f8d7da;
+    color: #721c24;
+}
+
+.alert-success {
+    background-color: #d4edda;
+    color: #155724;
+}
   </style>
   </head>
 
@@ -72,9 +97,7 @@
               <img src="{{ asset('images/logo.png') }}" width="75" height="75" class="rounded-xl ">
             </div> -->
             <div class="text-center">
-              <h2>
-                                Registration
-              </h2>
+              <h2>Registration</h2>
             </div>
           </div>
           <div class="card header-card shape-rounded" data-card-height="250">
@@ -84,22 +107,40 @@
           </div>
           <div class="card card-style">
             <div class="content mb-0 mt-1 mb-3">
-                <form method="post" action="#" enctype='multipart/form-data'>
-                    <input type="hidden" name="_token" value="S0pQqq83On2q9uFmFfo90ZPUURnudvbIcSYTcmtn"> 
+                <form method="POST" action="{{route('register')}}" enctype='multipart/form-data'>
+                  @csrf
+                   
+                    @if($errors->has('phone'))
+                      <div class="alert alert-danger">
+                          {{ $errors->first('phone') }}
+                      </div>
+                    @endif
+
+                    <!-- @if(session('success'))
+                        <div class="alert alert-success" style="background-color: #e6ffed; color: #2e7d32; padding: 10px; border: 1px solid #a5d6a7; border-radius: 5px;">
+                            <strong>Success!</strong> {{ session('success') }}
+                        </div>
+                    @endif -->
+                    @if(session('success'))
+                  <script>
+                      alert("{{ session('success') }}");
+                  </script>
+                  @endif
                     <div class="text-center my-3">
                     <img src="{{ asset('images/logo.png') }}" width="75" height="75" class="rounded-xl ">  
                     </div>     
                         <div class="input-style input-style-always-active has-borders no-icon validate-field mb-4 mt-4">
-                            <label for="name" class="color-green-dark">Name</label>
-                            <input type="text" class="form-control validate-name" id="name" required pattern="[A-Za-z\s]{3,}"  title="Please enter your name" placeholder="Enter name">
+                            <label for="name" class="color-green-dark">Name<span1 class="text-danger">*</span1></label>
+                            <input type="text" class="form-control validate-name" id="name" name="name" required pattern="[A-Za-z\s]{3,20}"  title="Please enter your name" placeholder="Enter name">
                             <i class="fa fa-times disabled invalid color-red-dark"></i>
                             <i class="fa fa-check disabled valid color-green-dark"></i>
                             <em>(Required)</em>
+                            <small id="nameError" class="text-danger"></small>
                         </div>
 
                         <div class="input-style input-style-always-active has-borders no-icon validate-field mb-4 mt-4">
-                            <label for="phone" class="color-green-dark">Phone Number</label>
-                            <input type="tel" class="form-control validate-name" id="phone" required pattern="\d{10}" maxlength="10" title="Please enter valid Phone Number" placeholder="Enter Phone Number">
+                            <label for="phone" class="color-green-dark">Phone Number<span1 class="text-danger">*</span1></label>
+                            <input type="tel" class="form-control validate-name" id="phone"  name="phone" required pattern="\d{10}" maxlength="10" title="Please enter valid Phone Number" placeholder="Enter Phone Number">
                             <i class="fa fa-times disabled invalid color-red-dark"></i>
                             <i class="fa fa-check disabled valid color-green-dark"></i>
                             <em>(Required)</em>
@@ -107,7 +148,7 @@
 
                         <div class="input-style input-style-always-active has-borders no-icon validate-field mb-4 mt-4">
                         <label for="email" class="color-green-dark">Email</label>
-                        <input type="email" class="form-control validate-name" id="email" placeholder="Enter the email" name="email" required title="Please EnterValid Email">
+                        <input type="email" class="form-control validate-name" id="email"  name="email" placeholder="Enter the email" name="email"  title="Please EnterValid Email">
                         <i class="fa fa-times disabled invalid color-red-dark"></i>
                         <i class="fa fa-check disabled valid color-green-dark"></i>
                         <em>(Required)</em>
@@ -115,22 +156,23 @@
 
                         <div class="input-style input-style-always-active has-borders no-icon validate-field mb-4 mt-4">
                         <label for="address" class="color-green-dark">Adress</label>
-                        <textarea class="form-control validate-name" id="address" rows="2" required placeholder="Enter Your Address"></textarea>
+                        <textarea class="form-control validate-name" id="address" rows="2"  name="address"  placeholder="Enter Your Address"></textarea>
                         <i class="fa fa-times disabled invalid color-red-dark"></i>
                         <i class="fa fa-check disabled valid color-green-dark"></i>
                         <em>(Required)</em>
                         </div>
 
                         <div class="input-style input-style-always-active has-borders no-icon validate-field mb-4 mt-4">
-                        <label for="password" class="color-green-dark">Password</label>
-                        <input type="password" class="form-control is-invalid " id="password" required minlength="6" placeholder=Password>
+                        <label for="password" class="color-green-dark">Password<span1 class="text-danger">*</span1></label>
+                        <input type="password" class="form-control is-invalid " id="password"  name="password"  placeholder=Password>
                         <div class="invalid-feedback" id="password"></div>
                         <em>(Required)</em>
+                        <small id="passwordError" class="text-danger"></small>
                         </div>
 
                         <div class="input-style input-style-always-active has-borders no-icon validate-field mb-4 mt-4">
-                        <label for="confirmPassword" class="color-green-dark">Confirm Password</label>
-                        <input type="password" class="form-control is-invalid " id="confirmPassword" required placeholder=ConfirmPassword>
+                        <label for="confirmPassword" class="color-green-dark">Confirm Password<span1 class="text-danger">*</span1></label>
+                        <input type="password" class="form-control is-invalid " id="confirmPassword" name=password_confirmation required placeholder=ConfirmPassword>
                         <div class="invalid-feedback" id="confirmPasswordFeedback"></div>
                         <em>(Required)</em>
                         </div>
@@ -165,7 +207,7 @@
         </div>
       </div>
     </div>
-    <p class="footer-copyright pb-3 mb-1">Copyright  &copy; <a href="https://bbmp.gov.in/" target="__blank">McWare</a> <span id="copyright-year">2025</span>. All Rights Reserved.</p>
+    <p class="footer-copyright pb-3 mb-1">Copyright  &copy; <a href="" target="__blank">McWare</a> <span id="copyright-year">2025</span>. All Rights Reserved.</p>
     <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
     </div>
   </div>
@@ -213,6 +255,38 @@
     if (!isValid) {
         e.preventDefault(); 
     }
+});
+</script>
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+
+  const nameField = document.getElementById('name');
+  const nameError = document.getElementById('nameError');
+
+  const passwordField = document.getElementById('password');
+  const passwordError = document.getElementById('passwordError');
+
+  // Validate Name (max 20 characters)
+  nameField.addEventListener('input', () => {
+    if (nameField.value.length > 20) {
+      nameError.textContent = "Name must not exceed 20 characters.";
+    } else {
+      nameError.textContent = "";
+    }
+  });
+
+  // Validate Password (min 8, max 15, must contain special char, digit, letter)
+  passwordField.addEventListener('input', () => {
+    const password = passwordField.value;
+    const regex = /^(?=.*[a-zA-Z])(?=.*\d)(?=.*[!@#$%^&*]).{8,15}$/;
+
+    if (!regex.test(password)) {
+      passwordError.textContent = "Password must be 8–15 chars, with letters, digits & special chars.";
+    } else {
+      passwordError.textContent = "";
+    }
+  });
+
 });
 </script>
  

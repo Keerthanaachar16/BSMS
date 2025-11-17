@@ -88,6 +88,52 @@
     .close-btn:hover{
       color:#ff0000;
     }
+
+  .profile-avatar-button {
+    position: absolute;   /* position relative to parent */
+    top: -40px;            /* distance from top of parent */
+    right: 2px;          /* distance from right of parent */
+    cursor: pointer;
+    z-index: 1000;
+}
+
+.profile-avatar {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    border: 3px solid #fff;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.2);
+    object-fit: cover;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.profile-avatar:hover {
+    transform: scale(1.1);
+    box-shadow: 0 6px 12px rgba(0,0,0,0.3);
+}
+ .footer-icon {
+        font-size: 20px;
+        transition: 0.3s ease-in-out;
+    }
+
+    .footer-link {
+        color: #333;
+        text-decoration: none;
+    }
+
+    .footer-link:hover .footer-icon {
+        transform: scale(1.3);
+        color: #0077ff;
+    }
+
+    .footer-link:hover div.label {
+        color: #0077ff;
+    }
+
+    /* Mobile bounce effect */
+    .footer-link:active .footer-icon {
+        transform: scale(1.5) rotate(10deg);
+    }
       
   </style>
   
@@ -105,9 +151,20 @@
                     <span class="me-2 fw-bold">{{ Auth::user()->name ?? 'User Name' }}</span>
   
                 </h2>
-                <a href="" data-menu="menu-main" class="bg-green-dark shadow-xl preload-img entered loaded"
-                    data-src="images/profile.jpeg" data-ll-status="loaded" onclick="toggleProfileSidebar()"
-                    style="background-image: url('https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTY6qtMj2fJlymAcGTWLvNtVSCULkLnWYCDcQ&s');" ></a>
+                <!-- <a href="" data-menu="menu-main" class="bg-green-dark shadow-xl preload-img entered loaded"
+                    img-src="{{ asset('images/logo.png') }}" data-ll-status="loaded" onclick="toggleProfileSidebar()"
+                    style="background-image: url{{ asset('images/logo.png') }};" ></a> -->
+                  <a href="" 
+                    data-menu="menu-main" 
+                    class="bg-green-dark shadow-xl preload-img entered loaded"
+                    onclick="toggleProfileSidebar()"
+                    style="display: inline-block; width: 80px; height: 80px; border-radius: 50%; overflow: hidden; box-shadow: 0 4px 6px rgba(0,0,0,0.2); cursor: pointer;">
+                        <img src="{{ asset('images/profile.jpeg') }}" 
+                            alt="Profile" 
+                            style="width: 100%; height: 100%; object-fit: cover; display: block;">
+                </a>
+                
+
             </div>
           <div class="card header-card shape-rounded" data-card-height="250">
             <div class="card-overlay bg-green-dark opacity-95"></div>
@@ -123,18 +180,21 @@
 <div id="profileSidebar">
   <div class="close-btn" onclick="closeProfileSidebar()">X</div>
     <div class="text-center mb-3">
-        <img src="{{ asset('images/logo.png') }}" width="50" class="mb-2">
+        <img src="{{ asset('images/profile.jpeg') }}" width="50" class="mb-2">
         <h5 class="fw-bold mb-0">{{ Auth::user()->name ?? 'User Name' }}</h5>
     </div>
     <hr>
     <ul class="list-unstyled">
+        <li class="mb-2"><a href="{{ url('/dashboard') }}" class="text-decoration-none color-green-dark fs-6">Dashboard</a></li>
         <li class="mb-2"><a href="{{ url('/profile') }}" class="text-decoration-none color-green-dark fs-6">Profile</a></li>
-        <li>
+        <li class="mb-2"><a href="{{ url('/complaint_list') }}" class="text-decoration-none color-green-dark fs-6">All Complaints</a></li>
+        <li class="mb-2"><a href="{{ url('/index') }}" class="text-decoration-none color-green-dark fs-6">Logout</a></li>
+        <!-- <li>
             <form action="{{ url('') }}" method="#">
                 @csrf
                 <button class="btn btn-link text-decoration-none p-0 color-green-dark fs-6">Logout</button>
             </form>
-        </li>
+        </li> -->
     </ul>
 </div>
     </div>
@@ -154,10 +214,40 @@
             <h3>Dashboard</h3>
         </div>
         <div class=" text-center d-flex flex-column gap-2">
-            <div class="d-flex flex-row gap-2 m-0 justify-content-center">
-                <div class=" text-center splide__slide d-flex flex-column w-48" >
-                    <div class="bg-theme rounded-m shadow-m text-center pt-3 pb-3 pe-1 ps-1 flex-fill h-100">
+
+        <div class="row justify-content-center">
+                <!-- Today Complaints -->
+                <div class="col-6 mb-3">
+                    <div class="bg-theme rounded-m shadow-m text-center pt-3 pb-3 pe-1 ps-1">
                         <div class="d-flex align-items-center gap-1 flex-column h-100">
+                            <p><b>Today Complaints</b></p>
+                            <div class="d-flex flex-row gap-1 justify-content-center">
+                                <div class="d-flex flex-column text-center">
+                                    <span class="fw-bold">{{$todayComplaints}}</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Total Complaints -->
+                <div class="col-6 mb-3">
+                    <div class="bg-theme rounded-m shadow-m text-center pt-3 pb-3 pe-1 ps-1">
+                        <div class="d-flex align-items-center gap-1 flex-column h-100">
+                            <p><b>Total Complaints</b></p>
+                            <div class="d-flex flex-row gap-1 justify-content-center">
+                                <div class="d-flex flex-column text-center">
+                                    <span class="fw-bold">{{$totalComplaints}}</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- <div class="d-flex flex-row gap-2 m-0 justify-content-center">
+                <div class=" text-center splide__slide d-flex flex-column w-48" >
+                    <div class=" bg-theme rounded-m shadow-m text-center pt-3 pb-3 pe-1 ps-1 flex-fill h-100">
+                        <div class=" d-flex align-items-center gap-1 flex-column h-100">
                             <p><b>Today Complaints</b></p>
                             <div class=" text-center d-flex flex-row gap-1">
                                 <div class="d-flex flex-column text-center">
@@ -180,7 +270,7 @@
                         </div>
                     </div>
                 </div>
-            </div>
+            </div> -->
 
             <div class="text-center">
                 <span class="text-danger">*Active Complaints </span>
@@ -196,37 +286,49 @@
 
                         </tr>
                     </thead>
-                    <tbody>
-                                                <tr>
+                    <!-- <tbody>
+                            <tr>
                             <th scope="row">09-07-2025</th>
                             <td class="color-dark">-</td>
                             <td class="color-dark">0</td>
                             <td class="color-dark">0</td>
-                        </tr>
-                                                <tr>
+                            </tr>
+                            <tr>
                             <th scope="row">10-07-2025</th>
                             <td class="color-dark">-</td>
                             <td class="color-dark">0</td>
                             <td class="color-dark">0</td>
-                        </tr>
-                                                <tr>
+                            </tr>
+                            <tr>
                             <th scope="row">11-07-2025</th>
                             <td class="color-dark">-</td>
                             <td class="color-dark">0</td>
                             <td class="color-dark">0</td>
-                        </tr>
-                                                <tr>
+                            </tr>
+                            <tr>
                             <th scope="row">12-07-2025</th>
                             <td class="color-dark">-</td>
                             <td class="color-dark">0</td>
                             <td class="color-dark">0</td>
-                        </tr>
-                                                <tr>
+                            </tr>
+                            <tr>
                             <th scope="row">13-07-2025</th>
                             <td class="color-dark">-</td>
                             <td class="color-dark">0</td>
                             <td class="color-dark">0</td>
-                        </tr>
+                            </tr>
+                        </tbody> -->
+
+
+                        <tbody>
+                            @foreach($weekComplaints as $day)
+                                <tr>
+                                    <th scope="row">{{ \Carbon\Carbon::parse($day->date)->format('d-m-Y') }}</th>
+                                    <td class="color-dark">{{ $day->pending }}</td>
+                                    <td class="color-dark">{{ $day->Inprogress }}</td>
+                                    <td class="color-dark">{{ $day->Resolved}}</td>
+                                </tr>
+                            @endforeach
                         </tbody>
 
                 </table>
@@ -239,7 +341,7 @@
      <!-- Action Buttons -->
     <div class=" text-center row mb-4">
         <div class=" d-flex justify-content-center gap-3">
-            <a href="{{ url('/add_complaints') }}" class="btn  w-70 bg-green-dark border rounded">Raise Complaint</a>
+            <a href="{{ url('/complaints') }}" class="btn  w-70 bg-green-dark border rounded">Raise Complaint</a>
             <a href="{{ url('/check_status') }}" class="btn  w-70 bg-green-dark border rounded">Check Status</a>
         </div>
     </div>
@@ -278,8 +380,46 @@
   <div class="footer-card card shape-rounded " style="height:230px">
     <div class="card-overlay bg-green-dark opacity-90"></div>
   </div>
-</div>       </div>
+</div>       
+<!-- </div> -->
+<!-- Footer Navigation -->
+<nav class="navbar navbar-light" >
+    <div class="container-fluid d-flex justify-content-around text-center py-2">
+
+        <!-- Complaints -->
+        <a href="{{ url('/complaint_list') }}" class="footer-link">
+            <div>
+                <i class="fas fa-exclamation-triangle footer-icon" style="color:#ffffff;"></i>
+                <div class="label" style="color:#ffffff;font-size: 13px;">Complaints</div>
+            </div>
+        </a>
+
+        <!-- Home -->
+        <a href="{{ url('/dashboard') }}" class="footer-link">
+            <div>
+                <i class="fas fa-home footer-icon" style="color:#ffffff;"></i>
+                <div class="label" style="color:#ffffff;font-size: 13px;">Home</div>
+            </div>
+        </a>
+
+        <!-- Profile -->
+        <a href="{{ url('/profile') }}" class="footer-link">
+            <div>
+                <i class="fas fa-user-circle footer-icon" style="color:#ffffff;"></i>
+                <div class="label" style="color:#ffffff;font-size: 13px;">Profile</div>
+            </div>
+        </a>
+
+        <a href="{{ url('/index') }}" class="footer-link">
+            <div>
+                <i class="fas fa-sign-out-alt footer-icon" style="color:#ffffff;"></i>
+                <div class="label" style="color:#ffffff;font-size: 13px;">Logout</div>
+            </div>
+        </a>
+
     </div>
+</nav>
+</div>
 
     <!-- JS -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
@@ -296,4 +436,4 @@
     }
 </script>
   </body>
-</html>
+</html> 

@@ -88,6 +88,29 @@
     .close-btn:hover{
       color:#ff0000;
     }
+     .footer-icon {
+        font-size: 20px;
+        transition: 0.3s ease-in-out;
+    }
+
+    .footer-link {
+        color: #333;
+        text-decoration: none;
+    }
+
+    .footer-link:hover .footer-icon {
+        transform: scale(1.3);
+        color: #0077ff;
+    }
+
+    .footer-link:hover div.label {
+        color: #0077ff;
+    }
+
+    /* Mobile bounce effect */
+    .footer-link:active .footer-icon {
+        transform: scale(1.5) rotate(10deg);
+    }
     
       
   </style>
@@ -108,7 +131,10 @@
                 </h2>
                 <a href="#" data-menu="menu-main" class="bg-green-dark shadow-xl preload-img entered loaded"
                     data-src="images/profile.jpeg" data-ll-status="loaded" onclick="toggleProfileSidebar()"
-                    style="background-image: url('https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTY6qtMj2fJlymAcGTWLvNtVSCULkLnWYCDcQ&s');" ></a>
+                    style="display: inline-block; width: 80px; height: 80px; border-radius: 50%; overflow: hidden; box-shadow: 0 4px 6px rgba(0,0,0,0.2); cursor: pointer;">
+                        <img src="{{ asset('images/profile.jpeg') }}" 
+                            alt="Profile" 
+                            style="width: 100%; height: 100%; object-fit: cover; display: block;" ></a>
             </div>
           <div class="card header-card shape-rounded" data-card-height="250">
             <div class="card-overlay bg-green-dark opacity-95"></div>
@@ -119,56 +145,59 @@
   <div class="container py-4">
   <!-- Header -->
     <div class="d-flex justify-content-between align-items-center mb-4">
-         <span class="me-2 fw-bold">{{ Auth::user()->name ?? 'User Name' }}</span>
+         <span class="me-2 fw-bold">{{ $user->name }}</span>
 <!-- Sidebar Content -->
 <div id="profileSidebar">
   <div class="close-btn" onclick="closeProfileSidebar()">X</div>
     <div class="text-center mb-3">
-        <img src="{{ asset('images/logo.png') }}" width="50" class="mb-2">
+        <img src="{{ asset('images/profile.jpeg') }}" width="50" class="mb-2">
         <h5 class="fw-bold mb-0">{{ Auth::user()->name ?? 'User Name' }}</h5>
     </div>
     <hr>
     <ul class="list-unstyled">
         <li class="mb-2"><a href="{{ url('/dashboard') }}" class="text-decoration-none color-green-dark fs-6">Dashboard</a></li>
+        <li class="mb-2"><a href="{{ url('/profile') }}" class="text-decoration-none color-green-dark fs-6">Profile</a></li>
         <li class="mb-2"><a href="{{ url('/profile_edit') }}" class="text-decoration-none color-green-dark fs-6">Edit</a></li>
-        <li>
-            <form action="{{ url('') }}" method="#">
-                @csrf
-                <button class="btn btn-link text-decoration-none p-0 color-green-dark fs-6">Logout</button>
-            </form>
-        </li>
+        <li class="mb-2"><a href="{{ url('/complaint_list') }}" class="text-decoration-none color-green-dark fs-6">All Complaints</a></li>
+        <li class="mb-2"><a href="{{ url('/index') }}" class="text-decoration-none color-green-dark fs-6">Logout</a></li>
     </ul>
 </div>
     </div>
 
     <div class="card card-style">
             <div class="content mb-0 mt-1 mb-3">
+              @if(session('success'))
+                  <div class="alert alert-success alert-dismissible fade show mt-2" role="alert">
+                      {{ session('success') }}
+                      <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                  </div>
+              @endif
                 <form method="post" action="#" enctype='multipart/form-data'>
-                    <input type="hidden" name="_token" value="S0pQqq83On2q9uFmFfo90ZPUURnudvbIcSYTcmtn">        
+                           
                         <div class="input-style input-style-always-active has-borders no-icon validate-field mb-4 mt-4">
                             <label for="name" class="color-green-dark">Name</label>
-                            <input type="text" class="form-control validate-name" id="name" required pattern="[A-Za-z\s]{3,}">
+                            <input type="text" class="form-control validate-name" id="name" name="name" value="{{$user->name}}" required pattern="[A-Za-z\s]{3,}" readonly>
                             <i class="fa fa-times disabled invalid color-red-dark"></i>
                             <i class="fa fa-check disabled valid color-green-dark"></i>
                         </div>
 
                         <div class="input-style input-style-always-active has-borders no-icon validate-field mb-4 mt-4">
                             <label for="phone" class="color-green-dark">Phone Number</label>
-                            <input type="tel" class="form-control validate-name" id="phone" required pattern="\d{10}" maxlength="10">
+                            <input type="tel" class="form-control validate-name" id="phone" name="phone" value="{{$user->phone}}" required pattern="\d{10}" maxlength="10" readonly>
                             <i class="fa fa-times disabled invalid color-red-dark"></i>
                             <i class="fa fa-check disabled valid color-green-dark"></i>
                         </div>
 
                         <div class="input-style input-style-always-active has-borders no-icon validate-field mb-4 mt-4">
                         <label for="email" class="color-green-dark">Email</label>
-                        <input type="email" class="form-control validate-name" id="email"  name="email">
+                        <input type="email" class="form-control validate-name" id="email"  name="email" value="{{$user->email}}" readonly>
                         <i class="fa fa-times disabled invalid color-red-dark"></i>
                         <i class="fa fa-check disabled valid color-green-dark"></i>
                         </div>
 
                         <div class="input-style input-style-always-active has-borders no-icon validate-field mb-4 mt-4">
                         <label for="address" class="color-green-dark">Adress</label>
-                        <textarea class="form-control validate-name" id="address" rows="2"></textarea>
+                        <textarea class="form-control validate-name" id="address" name="address" rows="2" readonly>{{$user->address}}</textarea>
                         <i class="fa fa-times disabled invalid color-red-dark"></i>
                         <i class="fa fa-check disabled valid color-green-dark"></i>
                         </div>
@@ -209,8 +238,46 @@
   <div class="footer-card card shape-rounded " style="height:230px">
     <div class="card-overlay bg-green-dark opacity-90"></div>
   </div>
-</div>       </div>
+</div>       
+</div>
+<!-- Footer Navigation -->
+<nav class="navbar navbar-light" >
+    <div class="container-fluid d-flex justify-content-around text-center py-2">
+
+        <!-- Complaints -->
+        <a href="{{ url('/complaint_list') }}" class="footer-link">
+            <div>
+                <i class="fas fa-exclamation-triangle footer-icon" style="color:#ffffff;"></i>
+                <div class="label" style="color:#ffffff;font-size: 13px;">Complaints</div>
+            </div>
+        </a>
+
+        <!-- Home -->
+        <a href="{{ url('/dashboard') }}" class="footer-link">
+            <div>
+                <i class="fas fa-home footer-icon" style="color:#ffffff;"></i>
+                <div class="label" style="color:#ffffff;font-size: 13px;">Home</div>
+            </div>
+        </a>
+
+        <!-- Profile -->
+        <a href="{{ url('/profile') }}" class="footer-link">
+            <div>
+                <i class="fas fa-user-circle footer-icon" style="color:#ffffff;"></i>
+                <div class="label" style="color:#ffffff;font-size: 13px;">Profile</div>
+            </div>
+        </a>
+
+        <a href="{{ url('/index') }}" class="footer-link">
+            <div>
+                <i class="fas fa-sign-out-alt footer-icon" style="color:#ffffff;"></i>
+                <div class="label" style="color:#ffffff;font-size: 13px;">Logout</div>
+            </div>
+        </a>
+
     </div>
+</nav>
+</div>
 
     <!-- JS -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>

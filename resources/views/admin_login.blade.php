@@ -68,10 +68,10 @@
                             <div class="d-flex row align-items-center">
                                 <div class="col-lg-6 col-12 mb-3">
                                     <div class="d-flex flex-row gap-1 align-items-center justify-content-around">
-                                        <img src="https://bbmpgov.org/public/theme/images/karnataka.png" width="15%;" alt="">
+                                        <img src="{{asset('images/karnataka.png')}}" width="15%;" alt="">
 
                                         <h6 class="text-dark fw-bold text-center">Black Spot Monitoring System</h6>
-                                         <img src="https://bbmpgov.org/public/theme/images/logo.png" width="15%;" alt="">
+                                         <img src="{{asset('images/logo.png')}}" width="15%;" alt="">
                                     </div>
 
                                 </div>
@@ -79,14 +79,20 @@
                                 <div class="col-lg-6 col-12">
                                     <h4 class="text-center" style="color:#2a1570;">Admin Login</h4>
                                     <h5 class="text-start mb-3 text-dark mt-5 mb-2 fs-5"></h5>
-                                    <form class="theme-form login-form responsive-form"  method="POST"  action="">
-                                        <input type="hidden" name="_token" value="z5IFaPDInut17Pb4nT4ucL8wUMgpKKwDaQWPUZV0" autocomplete="off">                                        
+                                    @if(session('success'))
+                                        <p style="color: green">{{ session('success') }}</p>
+                                    @endif
+                                    @if($errors->any())
+                                        <p style="color: red">{{ $errors->first() }}</p>
+                                    @endif
+                                    <form class="theme-form login-form responsive-form"  method="POST"  action="{{route('admin.login')}}">
+                                        @csrf                                        
                                         <div class="form-group">
-                                            <label>Email Address</label>
+                                            <label>Email</label>
                                             <div class="input-group"><span class="input-group-text"><i
                                                         class="fa-solid fa-envelope"></i></span>
-                                                <input class="form-control" type="email" name="email"
-                                                    value="" required="" placeholder="Test@gmail.com">
+                                                <input class="form-control" type="email" name="username"
+                                                    value="{{old('username')}}" required="" placeholder="Test@gmail.com">
                                             </div>
                                         </div>
                                         <div class="form-group">
@@ -105,7 +111,7 @@
                                         </div>
                                         
                                         <div class="form-group d-flex justify-content-between align-items-center mt-3">
-                                             <a href="/admin_forgot_password"  style="text-decoration:none;">Forgot Password?</a>
+                                             <a href="{{route('admin.forgot')}}"  style="text-decoration:none;">Forgot Password?</a>
                                             <button class="btn btn-primary btn-block" type="submit">Login</button>
 
                                         </div>

@@ -91,7 +91,7 @@
     .btn {
       margin-top: 15px;
       padding: 10px 20px;
-      background: #2aa749ff;
+      background:linear-gradient(64deg, #5154e7, #ae1ee9) !important;;
       color: white;
       border: none;
       border-radius: 6px;
@@ -114,6 +114,30 @@
       color: red;
       font-weight: bold;
     }
+    .footer-icon {
+        font-size: 20px;
+        transition: 0.3s ease-in-out;
+    }
+
+    .footer-link {
+        color: #333;
+        text-decoration: none;
+    }
+
+    .footer-link:hover .footer-icon {
+        transform: scale(1.3);
+        color: #0077ff;
+    }
+
+    .footer-link:hover div.label {
+        color: #0077ff;
+    }
+
+    /* Mobile bounce effect */
+    .footer-link:active .footer-icon {
+        transform: scale(1.5) rotate(10deg);
+    }
+    
     
       
   </style>
@@ -132,9 +156,15 @@
                     <span class="me-2 fw-bold">Check_Status</span>
   
                 </h2>
-                <a href="#" data-menu="menu-main" class="bg-green-dark shadow-xl preload-img entered loaded"
-                    data-src="images/profile.jpeg" data-ll-status="loaded" onclick="toggleProfileSidebar()"
-                    style="background-image: url('https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTY6qtMj2fJlymAcGTWLvNtVSCULkLnWYCDcQ&s');" ></a>
+                <a href="" 
+                    data-menu="menu-main" 
+                    class="bg-green-dark shadow-xl preload-img entered loaded"
+                    onclick="toggleProfileSidebar()"
+                    style="display: inline-block; width: 80px; height: 80px; border-radius: 50%; overflow: hidden; box-shadow: 0 4px 6px rgba(0,0,0,0.2); cursor: pointer;">
+                        <img src="{{ asset('images/profile.jpeg') }}" 
+                            alt="Profile" 
+                            style="width: 100%; height: 100%; object-fit: cover; display: block;">
+                </a>
             </div>
           <div class="card header-card shape-rounded" data-card-height="250">
             <div class="card-overlay bg-green-dark opacity-95"></div>
@@ -150,19 +180,21 @@
 <div id="profileSidebar">
   <div class="close-btn" onclick="closeProfileSidebar()">X</div>
     <div class="text-center mb-3">
-        <img src="{{ asset('images/logo.png') }}" width="50" class="mb-2">
+        <img src="{{ asset('images/profile.jpeg') }}" width="50" class="mb-2">
         <h5 class="fw-bold mb-0">{{ Auth::user()->name ?? 'User Name' }}</h5>
     </div>
     <hr>
     <ul class="list-unstyled">
         <li class="mb-2"><a href="{{ url('/dashboard') }}" class="text-decoration-none color-green-dark fs-6">Dashboard</a></li>
-        <li class="mb-2"><a href="{{ url('/profile_edit') }}" class="text-decoration-none color-green-dark fs-6">Edit</a></li>
-        <li>
+        <li class="mb-2"><a href="{{ url('/profile') }}" class="text-decoration-none color-green-dark fs-6">Profile</a></li>
+        <li class="mb-2"><a href="{{ url('/complaint_list') }}" class="text-decoration-none color-green-dark fs-6">All Complaints</a></li>
+        <li class="mb-2"><a href="{{ url('/index') }}" class="text-decoration-none color-green-dark fs-6">Logout</a></li>
+        <!-- <li>
             <form action="{{ url('') }}" method="#">
                 @csrf
              <button class="btn btn-link text-decoration-none p-0 color-green-dark fs-6">Logout</button>
             </form>
-        </li>
+        </li> -->
     </ul>
 </div>
     </div>
@@ -170,7 +202,7 @@
     <div class="card card-style">
             <div class="content mb-0 mt-1 mb-3">
                 <form method="GET" action="#" enctype='multipart/form-data'>
-                    <input type="hidden" name="_token" value="S0pQqq83On2q9uFmFfo90ZPUURnudvbIcSYTcmtn">        
+                    @csrf     
                         <div class="input-style input-style-always-active has-borders no-icon validate-field mb-4 mt-4">
                            <label for="compid" class="color-green-dark">Complaint ID:</label>
                             <input type="text" name="complaint_id" placeholder="Enter Complaint ID" value="{{ request('complaint_id') }}">
@@ -179,32 +211,35 @@
                         </div>
                          
                 </form>
-                {{-- Show result if a complaint_id is submitted --}}
+
     @if(request()->has('complaint_id'))
-        @if(request('complaint_id') == 'C001')
-        <a href="{{url('/card_details')}}" style="text-decoration:none; color:inherit;">
-            <div class="card1">
-              <p><strong>Complaint ID:</strong> C001</p>
-              <p><strong>Date:</strong>  2025-07-17</p>
-              <p><strong>Description:</strong> Overflowing garbage bin</p>
-              <!-- <a href="{{ url('/complaint-details') }}">View Full Details</a> -->
-            </div>
-        </a>
-        @else
-            <div class="card1 error">
-              Result not found. Please enter a valid Complaint ID.
-            </div>
-        @endif
+    @if($complaint)
+        <div class="card1">
+            <p><strong>Complaint ID:</strong> {{ $complaint->id }}</p>
+            <p><strong>Date:</strong> {{ $complaint->created_at->format('Y-m-d') }}</p>
+            <p><strong>Description:</strong> {{ $complaint->remarks }}</p>
+            <p><strong>Status:</strong> {{ $complaint->complaint_status }}</p>
+
+            @if($complaint->image) 
+                <p><strong>Image:</strong></p>
+                <img src="{{ asset('complaint_images/'.$complaint->image) }}" alt="Complaint Image" style="max-width: 60%; height:60%;">
+            @endif
+        </div>
+    @else
+        <div class="card1 error">
+            Complaint ID "{{ request('complaint_id') }}" not found. Please enter a valid Complaint ID.
+        </div>
     @endif
+@endif
                    
-            </div>
-            </div>
+</div>
+</div>
             
      
     
 
        
-    <div class="footer mb-80" >
+<!-- <div class="footer mb-80" >
   <div class="footer card card-style mx-0 mb-0">
     <div class="content mb-4">
       <div class="row justify-content-center mb-1">
@@ -234,8 +269,81 @@
   <div class="footer-card card shape-rounded " style="height:230px">
     <div class="card-overlay bg-green-dark opacity-90"></div>
   </div>
-</div>       </div>
+</div>       
+</div> -->
+</div>
+<div class="footer mb-80" >
+  <div class="footer card card-style mx-0 mb-0">
+    <div class="content mb-4">
+      <div class="row justify-content-center mb-1">
+        <div class="col-12 ps-0 footernemusub1">
+          <a href="#" class="footer-title pt-4">Black Spot Monitoring System</a>
+          <br>
+          <div class="text-center" style="font-size: 14px;">
+              Powered By 
+            </div>
+            <br>
+          <div class="text-center mb-3">
+            <a href="#" target="_blank" class="icon icon-xs rounded-sm shadow-l me-1 bg-facebook"><i class="fab fa-facebook-f"></i></a>
+            <a href="#" target="_blank" class="icon icon-xs rounded-sm shadow-l me-1 bg-twitter"><i class="fab fa-twitter"></i></a>
+            <a href="https://wa.me/919066798311" target="_blank" class="a-green icon icon-xs rounded-sm shadow-l me-1 bg-whatsapp"><i class="fab fa-whatsapp"></i></a>
+            <a href="#" target="_blank" class="icon icon-xs rounded-sm shadow-l me-1 bg-linkedin"><i class="fab fa-linkedin-in"></i></a>
+            <a href="#" target="_blank" class="icon icon-xs rounded-sm shadow-l me-1 bg-red-dark"><i class="fa-brands fa-youtube"></i></a>
+            <a href="#" class="back-to-top icon icon-xs rounded-sm shadow-l bg-highlight color-white"><i class="fa fa-arrow-up"></i></a>
+          </div>
+          <p class="boxed-text-l">For any technical support kindly contact through<br>WhatsApp message preferably <br> <a href="https://wa.me/9844043717" target="_blank">9844043717</a> </p>
+        </div>
+      </div>
     </div>
+    <p class="footer-copyright pb-3 mb-1">Copyright  &copy; <a href="https://bbmp.gov.in/" target="__blank">McWare</a> <span id="copyright-year">2025</span>. All Rights Reserved.</p>
+    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+    </div>
+  </div>
+  <div class="footer-card card shape-rounded " style="height:230px">
+    <div class="card-overlay bg-green-dark opacity-90"></div>
+  </div>
+  </div>
+  </div>
+
+<!-- Footer Navigation -->
+<nav class="navbar navbar-light" >
+    <div class="container-fluid d-flex justify-content-around text-center py-2">
+
+        <!-- Complaints -->
+        <a href="{{ url('/complaint_list') }}" class="footer-link">
+            <div>
+                <i class="fas fa-exclamation-triangle footer-icon" style="color:#ffffff;"></i>
+                <div class="label" style="color:#ffffff;font-size: 13px;">Complaints</div>
+            </div>
+        </a>
+
+        <!-- Home -->
+        <a href="{{ url('/dashboard') }}" class="footer-link">
+            <div>
+                <i class="fas fa-home footer-icon" style="color:#ffffff;"></i>
+                <div class="label" style="color:#ffffff;font-size: 13px;">Home</div>
+            </div>
+        </a>
+
+        <!-- Profile -->
+        <a href="{{ url('/profile') }}" class="footer-link">
+            <div>
+                <i class="fas fa-user-circle footer-icon" style="color:#ffffff;"></i>
+                <div class="label" style="color:#ffffff;font-size: 13px;">Profile</div>
+            </div>
+        </a>
+
+        <a href="{{ url('/index') }}" class="footer-link">
+            <div>
+                <i class="fas fa-sign-out-alt footer-icon" style="color:#ffffff;"></i>
+                <div class="label" style="color:#ffffff;font-size: 13px;">Logout</div>
+            </div>
+        </a>
+
+    </div>
+</nav>
+</div>
+
 
     <!-- JS -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>

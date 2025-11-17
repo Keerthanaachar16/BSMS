@@ -44,6 +44,13 @@
     .footer-card{
         bottom : 0px !important;
     }
+    .span1 .text-danger{
+      position:absolute;
+      margin-left:0;
+      color:red !important;
+      opacity:0;
+      
+    }
   </style>
   </head>
 
@@ -67,21 +74,22 @@
             <div class="card-overlay dark-mode-tint"></div>
             <div class="card-bg preload-img" data-src=""></div>
           </div>
-                                <div class="card card-style">
-    <div class="content mt-2 mb-0">
-      <form class="mt-2" method="get" action="#">
-        <input type="hidden" name="_token" value="S0pQqq83On2q9uFmFfo90ZPUURnudvbIcSYTcmtn">  
+          <div class="card card-style">
+        <div class="content mt-2 mb-0">
+      <form class="mt-2" method="POST" action="{{url('/send-otp')}}">
+        @csrf
+        <!-- <input type="hidden" name="_token" value="S0pQqq83On2q9uFmFfo90ZPUURnudvbIcSYTcmtn">   -->
         <div class="text-center my-3">
                     <img src="{{ asset('images/logo.png') }}" width="75" height="75" class="rounded-xl ">  
         </div>       
         <div class="input-style input-style-always-active has-borders no-icon validate-field mb-4">
-          <input type="number" class="form-control validate-text phone" id="phone" placeholder="Mobile" name="phone" required>
-          <label for="phone" class="color-green-dark">Mobile*</label>
+          <input type="email" class="form-control validate-text email" id="email" placeholder="Email" name="email" required>
+          <label for="email" class="color-green-dark">email<span1 class="text-danger">*</span1></label>
           <i class="fa fa-times disabled invalid color-red-dark"></i>
           <i class="fa fa-check disabled valid color-green-dark"></i>
         </div>
         <center>
-          <input type="submit" class="btn btn-m mt-4 mb-4 btn-full bg-green-dark rounded-sm text-uppercase font-900" value="Submit">
+          <input type="submit" class="btn btn-m mt-4 mb-4 btn-full bg-green-dark rounded-sm text-uppercase font-900" value="Send OTP">
         </center>
       </form>
     </div>

@@ -155,7 +155,30 @@
     .status-progress {
       background-color: orange;
     }
+    .footer-icon {
+        font-size: 20px;
+        transition: 0.3s ease-in-out;
+    }
 
+    .footer-link {
+        color: #333;
+        text-decoration: none;
+    }
+
+    .footer-link:hover .footer-icon {
+        transform: scale(1.3);
+        color: #0077ff;
+    }
+
+    .footer-link:hover div.label {
+        color: #0077ff;
+    }
+
+    /* Mobile bounce effect */
+    .footer-link:active .footer-icon {
+        transform: scale(1.5) rotate(10deg);
+    }
+      
     
       
   </style>
@@ -170,14 +193,20 @@
     <div id="page">
          <div class="page-title page-title-small">
                 <h2>
-                    <a href="{{ url('/dashboard') }}" data-back-button="" style="padding-right: 5px;"><i class="fa fa-arrow-left" ></i></a>
+                    <a href="{{ route('official_dashboard') }}" data-back-button="" style="padding-right: 5px;"><i class="fa fa-arrow-left" ></i></a>
                     <span class="me-2 fw-bold">Complaint_List</span>
   
                 </h2>
-                <a href="#" data-menu="menu-main" class="bg-green-dark shadow-xl preload-img entered loaded"
-                    data-src="images/profile.jpeg" data-ll-status="loaded" onclick="toggleProfileSidebar()"
-                    style="background-image: url('https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTY6qtMj2fJlymAcGTWLvNtVSCULkLnWYCDcQ&s');" ></a>
-            </div>
+                <a href="" 
+                    data-menu="menu-main" 
+                    class="bg-green-dark shadow-xl preload-img entered loaded"
+                    onclick="toggleProfileSidebar()"
+                    style="display: inline-block; width: 80px; height: 80px; border-radius: 50%; overflow: hidden; box-shadow: 0 4px 6px rgba(0,0,0,0.2); cursor: pointer;">
+                        <img src="{{ asset('images/profile.jpeg') }}" 
+                            alt="Profile" 
+                            style="width: 100%; height: 100%; object-fit: cover; display: block;">
+                </a>
+                  </div>
           <div class="card header-card shape-rounded" data-card-height="200">
             <div class="card-overlay bg-green-dark opacity-95"></div>
             <div class="card-overlay dark-mode-tint"></div>
@@ -198,13 +227,15 @@
     <hr>
     <ul class="list-unstyled">
         <li class="mb-2"><a href="{{ url('/dashboard') }}" class="text-decoration-none color-green-dark fs-6">Dashboard</a></li>
-        <li class="mb-2"><a href="{{ url('/profile_edit') }}" class="text-decoration-none color-green-dark fs-6">Edit</a></li>
-        <li>
+        <li class="mb-2"><a href="{{ url('/profile') }}" class="text-decoration-none color-green-dark fs-6">Profile</a></li>
+        <li class="mb-2"><a href="{{ url('/complaint_list') }}" class="text-decoration-none color-green-dark fs-6">All Complaints</a></li>
+        <li class="mb-2"><a href="{{ url('/index') }}" class="text-decoration-none color-green-dark fs-6">Logout</a></li>
+        <!-- <li>
             <form action="{{ url('') }}" method="#">
                 @csrf
                 <button class="btn btn-link text-decoration-none p-0 color-green-dark fs-6">Logout</button>
             </form>
-        </li>
+        </li> -->
     </ul>
 </div>
     </div>
@@ -218,8 +249,8 @@
                     </div>
                      </div> 
                 <form method="post" action="#" enctype='multipart/form-data'>
-                    <input type="hidden" name="_token" value="S0pQqq83On2q9uFmFfo90ZPUURnudvbIcSYTcmtn">        
-                        <div class="input-style input-style-always-active has-borders no-icon validate-field mb-4 mt-4">
+                          
+                        <!-- <div class="input-style input-style-always-active has-borders no-icon validate-field mb-4 mt-4">
                             <a href="{{url('/complaints_details1')}}" style="text-decoration:none; color:inherit;">
                             <div class="complaint-card" data-status="open">
                                 <div><strong>Complaint ID:</strong> C001</div>
@@ -252,7 +283,46 @@
                         </a>
                         </div>
                         </div>   
-                           
+                            -->
+
+
+                             {{-- Open Complaints --}}
+        @foreach($openComplaints as $complaint)
+            <div class="input-style input-style-always-active has-borders no-icon validate-field mb-4 mt-4 complaint-card" data-status="open">
+                <a href="{{ route('complaint.show',$complaint->id) }}" style="text-decoration:none; color:inherit;">
+                    <div>
+                        <strong>Complaint ID:</strong>{{ $complaint->id }}
+                    </div>
+                    <div>
+                        <strong>Date:</strong> {{ \Carbon\Carbon::parse($complaint->created_at)->format('Y-m-d') }}
+                    </div>
+                    <div>
+                        <strong>Description:</strong> {{ $complaint->remarks }}
+                    </div>
+                    <div class="status status-{{ $complaint->complaint_status == 'pending' ? 'open' : 'progress' }}">
+                        {{ ucfirst($complaint->complaint_status) }}
+                    </div>
+                </a>
+            </div>
+        @endforeach
+
+        {{-- Closed Complaints --}}
+        @foreach($closedComplaints as $complaint)
+            <div class="input-style input-style-always-active has-borders no-icon validate-field mb-4 mt-4 complaint-card" data-status="closed" style="display:none;">
+                <a href="{{ route('complaints.shows',$complaint->id) }}" style="text-decoration:none; color:inherit;">
+                    <div>
+                        <strong>Complaint ID:</strong> {{ $complaint->id }}
+                    </div>
+                    <div>
+                        <strong>Date:</strong> {{ \Carbon\Carbon::parse($complaint->created_at)->format('Y-m-d') }}
+                    </div>
+                    <div>
+                        <strong>Description:</strong> {{ $complaint->remarks }}
+                    </div>
+                    <div class="status status-closed">Resolved</div>
+                </a>
+            </div>
+        @endforeach
                 </form>
            
             </div>
@@ -287,8 +357,46 @@
   <div class="footer-card card shape-rounded " style="height:230px">
     <div class="card-overlay bg-green-dark opacity-90"></div>
   </div>
-</div>       </div>
+</div>       
+</div>
+<!-- Footer Navigation -->
+<nav class="navbar navbar-light" >
+    <div class="container-fluid d-flex justify-content-around text-center py-2">
+
+        <!-- Complaints -->
+        <a href="{{ url('/complaint_list') }}" class="footer-link">
+            <div>
+                <i class="fas fa-exclamation-triangle footer-icon" style="color:#ffffff;"></i>
+                <div class="label" style="color:#ffffff;font-size: 13px;">Complaints</div>
+            </div>
+        </a>
+
+        <!-- Home -->
+        <a href="{{ url('/dashboard') }}" class="footer-link">
+            <div>
+                <i class="fas fa-home footer-icon" style="color:#ffffff;"></i>
+                <div class="label" style="color:#ffffff;font-size: 13px;">Home</div>
+            </div>
+        </a>
+
+        <!-- Profile -->
+        <a href="{{ url('/profile') }}" class="footer-link">
+            <div>
+                <i class="fas fa-user-circle footer-icon" style="color:#ffffff;"></i>
+                <div class="label" style="color:#ffffff;font-size: 13px;">Profile</div>
+            </div>
+        </a>
+
+        <a href="{{ url('/index') }}" class="footer-link">
+            <div>
+                <i class="fas fa-sign-out-alt footer-icon" style="color:#ffffff;"></i>
+                <div class="label" style="color:#ffffff;font-size: 13px;">Logout</div>
+            </div>
+        </a>
+
     </div>
+</nav>
+</div>
 
     <!-- JS -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>

@@ -120,9 +120,18 @@
                     <span class="me-2 fw-bold">Card_Details</span>
   
                 </h2>
-                <a href="#" data-menu="menu-main" class="bg-green-dark shadow-xl preload-img entered loaded"
+                <!-- <a href="#" data-menu="menu-main" class="bg-green-dark shadow-xl preload-img entered loaded"
                     data-src="images/profile.jpeg" data-ll-status="loaded" onclick="toggleProfileSidebar()"
-                    style="background-image: url('https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTY6qtMj2fJlymAcGTWLvNtVSCULkLnWYCDcQ&s');" ></a>
+                    style="background-image: url('https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTY6qtMj2fJlymAcGTWLvNtVSCULkLnWYCDcQ&s');" ></a> -->
+                    <a href="" 
+                    data-menu="menu-main" 
+                    class="bg-green-dark shadow-xl preload-img entered loaded"
+                    onclick="toggleProfileSidebar()"
+                    style="display: inline-block; width: 80px; height: 80px; border-radius: 50%; overflow: hidden; box-shadow: 0 4px 6px rgba(0,0,0,0.2); cursor: pointer;">
+                        <img src="{{ asset('images/profile.jpeg') }}" 
+                            alt="Profile" 
+                            style="width: 100%; height: 100%; object-fit: cover; display: block;">
+                </a>
             </div>
           <div class="card header-card shape-rounded" data-card-height="200">
             <div class="card-overlay bg-green-dark opacity-95"></div>
